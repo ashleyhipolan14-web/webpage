@@ -1,0 +1,27 @@
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+// All Sari-Sari Store routes (Require Login)
+Route::middleware(['auth', 'verified'])->group(function () {
+    
+    // Main Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Sari-Sari Store Features (We will build these next)
+    Route::get('/inventory', function () { return Inertia::render('Inventory'); })->name('inventory');
+    Route::get('/pos', function () { return Inertia::render('POS'); })->name('pos');
+    Route::get('/reports', function () { return Inertia::render('Reports'); })->name('reports');
+
+});
